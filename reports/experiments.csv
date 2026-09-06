@@ -1,0 +1,51 @@
+run_id,data_manifest,feature_version,split,model,parameters,RMSE_jan,RMSE_jul,combined_RMSE,runtime,decision,notes
+base_global,manifest.csv,n/a,jan+jul2025,median,p_global,610.7,754.0,693.7,0.0,keep,50/50=682.3
+base_airport,manifest.csv,n/a,jan+jul2025,median,p_airport,586.7,723.8,666.1,0.0,keep,50/50=655.2
+base_airport_hour,manifest.csv,n/a,jan+jul2025,median,p_ah,584.0,718.6,662.0,0.0,keep,50/50=651.3
+catboost_v1,manifest.csv,v1,jan+jul2025,catboost,"{'iterations': 1500, 'lr': 0.05, 'depth': 8}",397.1,460.9,433.6,keep-primary,?,50/50=429.0
+lightgbm-huber_v1,manifest.csv,v1,jan+jul2025,lightgbm-huber,"{'objective': 'huber', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",583.5,729.7,668.4,drop-wrong-objective,?,50/50=656.6
+lightgbm-l2_v1,manifest.csv,v1,jan+jul2025,lightgbm-l2,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",395.9,487.3,448.8,keep-ensemble?,?,L2 beats huber 668.4->448.8; huber optimizes wrong target for RMSE
+catboost_v1_strict,manifest.csv,v1_strict,jan+jul2025,catboost,"{'iterations': 1500, 'lr': 0.05, 'depth': 8}",469.1,544.8,512.4,keep-fallback-ref,?,strict 512.4 vs permissive 433.6; permissive buys ~79s
+lightgbm-huber_v1_strict,manifest.csv,v1_strict,jan+jul2025,lightgbm-huber,"{'objective': 'huber', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",591.3,733.4,673.7,918.8,?,50/50=662.4
+lightgbm-l2_v1_strict,manifest.csv,v1_strict,jan+jul2025,lightgbm-l2,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",520.9,602.2,567.4,keep-fallback-ref,?,strict L2 567.4 vs permissive 448.8
+catboost_v2,manifest.csv,v2,jan+jul2025,catboost,"{'iterations': 1500, 'lr': 0.05, 'depth': 8}",404.8,460.4,436.4,972.0,?,50/50=432.6
+lightgbm-regression_v2,manifest.csv,v2,jan+jul2025,lightgbm-regression,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",396.5,489.3,450.3,972.0,?,50/50=442.9
+cat_v1+perapt,manifest.csv,v1,jan+jul2025,catboost-perapt,LIRF/EGLL/LFPG heads,395.9,460.7,433.0,15700.1,?,50/50=428.3
+blend_cat07_lgbm03_v1,manifest.csv,v1,jan+jul2025,catboost0.7+lightgbm-l2_0.3,w=0.7/0.3 on holdout preds,389.4,461.2,430.6,0.0,keep-ship,"50/50=425.3; jan AND jul beat-or-hold both singles; free, no retrain"
+clip_negcap_v1,manifest.csv,v1,jan+jul2025,policy,negatives->0 on cat_v1,397.1,460.9,433.6,0.0,keep,"no-op on holdout (no neg preds); validator-safe, apply always"
+clip_cap2h_v1,manifest.csv,v1,jan+jul2025,policy,upper cap 7200 on cat_v1,445.8,580.0,524.3,0.0,drop,upper-tail clip HURTS (+90.7); never cap above; matches CHALLENGE.md
+cat_v2_congestion,manifest.csv,v2,jan+jul2025,catboost,iters1500 lr0.05 d8 +F5 counts,404.8,460.4,436.4,972.0,drop,worse than v1 433.6 both months; F5 dropped for v1 ship
+lgbm_v2_congestion,manifest.csv,v2,jan+jul2025,lightgbm-regression,L2 +F5 counts,396.5,489.3,450.3,972.0,drop,worse than v1 448.8; F5 dropped
+cat_v1_LIRFhead_broken,manifest.csv,v1,jan+jul2025,catboost-perapt,"LIRF head, NO median-fill (bug)",431.8,539.4,494.3,0.0,drop-bug,per_airport.py skipped train.py median-fill -> NaN-train/filled-eval mismatch; fix then retrain
+proxy_honest_fullval,manifest.csv,n/a,jan+jul2025,m_aobt+aptmedian-fallback,fallback=airport median,559.5,720.8,653.8,0.0,ref-only,428.2 was joined-only; honest full-val 653.8 -> cat_v1 wins big
+ensemble_cat07_lgb03_v1,manifest.csv,v1,jan+jul2025,blend-0.7/0.3,w_cat=0.7,389.4,461.2,430.6,48,keep-final-candidate,endpoints reproduce 433.6/448.8 exactly
+catboost_v2,manifest.csv,v2,jan+jul2025,catboost,"{'iterations': 1483, 'lr': 0.05, 'depth': 8}",402.0,452.1,430.5,16294.4,?,50/50=427.0
+cat_v1+perapt,manifest.csv,v1,jan+jul2025,catboost-perapt,LIRF/EGLL/LFPG heads,390.2,448.9,423.7,216.2,?,50/50=419.6
+note_v2_supersede,manifest.csv,v2,jan+jul2025,note,,,,,0.0,info,"catboost_v2 436.4 (14:49) SUPERSEDED by retrain 430.5 (verified via V2=1 evaluate); old run unexplained, treat as stale"
+cat_v2+perapt,manifest.csv,v2,jan+jul2025,catboost-perapt,LIRF/EGLL/LFPG heads,406.2,458.3,435.8,240.1,?,50/50=432.3
+lightgbm-regression_v1_l63,manifest.csv,v1_l63,jan+jul2025,lightgbm-regression,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 63, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",396.0,488.2,449.4,66.5,?,50/50=442.1
+lightgbm-regression_v1_l255,manifest.csv,v1_l255,jan+jul2025,lightgbm-regression,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 255, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",396.1,487.7,449.1,150.9,?,50/50=441.9
+lightgbm-regression_v1_md200,manifest.csv,v1_md200,jan+jul2025,lightgbm-regression,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 200, 'verbosity': -1, 'seed': 42}",395.2,487.3,448.5,71.3,?,50/50=441.2
+lightgbm-regression_v1_md1000,manifest.csv,v1_md1000,jan+jul2025,lightgbm-regression,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 1000, 'verbosity': -1, 'seed': 42}",394.0,494.3,452.3,109.0,?,50/50=444.2
+catboost_v1_d10,manifest.csv,v1_d10,jan+jul2025,catboost,"{'iterations': 1500, 'lr': 0.05, 'depth': 10}",398.7,466.8,437.7,1236.1,?,50/50=432.7
+perapt_blend08_v1,manifest.csv,v1,jan+jul2025,perapt-cat0.8+lgbm-L2_0.2,w=0.8/0.2 on holdout preds,387.4,449.5,422.9,0.0,keep-SHIP,"best holdout; beats all singles both months (jul +0.6 vs perapt alone, documented); full-refit as v2 file"
+v2_perapt_decision,manifest.csv,v2,jan+jul2025,catboost-perapt,see cat_v2+perapt row,406.2,458.3,435.8,240.1,drop,v2 heads HURT base 430.5->435.8 (LIRF head overfits on v2 feats); ship lineage stays v1 feats
+tuning_lgbm_summary,manifest.csv,v1_*,jan+jul2025,lightgbm-regression,"grid leaves{63,255}/min{200,1000}",395.2,487.3,448.5,0.0,keep-defaults,best grid 448.5 vs default 448.8 (-0.3 noise); keep leaves127/min500
+tuning_cat_d10,manifest.csv,v1_d10,jan+jul2025,catboost,depth10 vs 8,398.7,466.8,437.7,1236.1,drop,deeper OVERFITS tail (LIRF 1196.8 vs 1172.7); keep depth8
+submit_v2_local,manifest.csv,v1_full,full2025->ranking,perapt-cat0.8+lgbm0.2,SUB_VER=2 PERAPT=1 W_CAT=0.8,387.4,449.5,422.9,0.0,keep-LOCAL,likable-river_v2.parquet validator-green md5=22ff6b11; holdout refs are pool-model estimates; NOT uploaded per user
+ship+jfpatch,manifest.csv,v1,jan+jul2025,perapt-cat0.8+lgbm0.2+jfpatch,"jf->spec, LIRF-jf->LIRF-spec",355.2,362.4,359.2,28.1,keep-SHIP,50/50=358.8
+submit_v3_local,manifest.csv,v1_full,full2025->ranking,perapt-cat0.8+lgbm0.2+jfpatch,SUB_VER=3 PERAPT=1 JFPATCH=1 W_CAT=0.8,355.2,362.4,359.2,0.0,keep-LOCAL,likable-river_v3.parquet validator-green; holdout refs are pool-model estimates; NOT uploaded per user
+lightgbm-regression_v1_sz,manifest.csv,v1_sz,jan+jul2025,lightgbm-regression,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",393.8,487.0,447.8,97.7,?,50/50=440.4
+catboost_v1_sz,manifest.csv,v1_sz,jan+jul2025,catboost,"{'iterations': 1494, 'lr': 0.05, 'depth': 8}",382.7,467.9,431.9,832.5,?,50/50=425.3
+cat_v1_sz+perapt,manifest.csv,v1_sz,jan+jul2025,catboost-perapt,LIRF/EGLL/LFPG heads,396.8,446.8,425.2,203.3,?,50/50=421.8
+ship+jfpatch_v1_sz,manifest.csv,v1_sz,jan+jul2025,perapt-cat0.8+lgbm0.2+jfpatch,"jf->spec, LIRF-jf->LIRF-spec",356.9,364.6,361.2,28.6,keep-SHIP,50/50=360.7
+standzone_fix_decision,manifest.csv,v1_sz,jan+jul2025,lineage-compare,_sz full pipe 361.2 vs v1 359.2,356.9,364.6,361.2,0.0,keep-fix-drop-lineage,"fix kept in features.py (correct, EGLL/LEBL/LEMD slices win); ship stays v1 lineage per Jan+Jul rule; ±2 seed-noise zone"
+catboost_v1_strict,manifest.csv,v1_strict,jan+jul2025,catboost,"{'iterations': 1499, 'lr': 0.05, 'depth': 8}",469.5,538.0,508.6,2372.8,?,50/50=503.7
+lightgbm-huber_v1_strict,manifest.csv,v1_strict,jan+jul2025,lightgbm-huber,"{'objective': 'huber', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",590.8,732.8,673.2,2372.8,?,50/50=661.8
+lightgbm-regression_v1_strict_l2,manifest.csv,v1_strict_l2,jan+jul2025,lightgbm-regression,"{'objective': 'regression', 'alpha': 0.9, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 500, 'verbosity': -1, 'seed': 42}",519.0,598.4,564.4,84.4,?,50/50=558.7
+strict_blend_decision,manifest.csv,v1_strict,jan+jul2025,cat+lgbm-L2 blends,w 0.5-0.8,472.7,539.6,510.9,0.0,keep-cat-alone,all blends worse than strict cat 508.6; strict track = cat only + perapt heads next
+cat_v1_strict+perapt,manifest.csv,v1_strict,jan+jul2025,catboost-perapt,LIRF/EGLL/LFPG heads,472.3,535.2,508.1,248.2,?,50/50=503.7
+strict_perapt_decision,manifest.csv,v1_strict,jan+jul2025,catboost-perapt strict,LIRF/EGLL/LFPG heads,472.3,535.2,508.1,0.0,drop-mixed,pooled -0.5 but jan +2.8 worse; strict ship stays cat-alone 508.6 per Jan+Jul rule
+xgb_v1,manifest.csv,v1,jan+jul2025,xgboost-hist,depth8 eta0.05 sub0.8 col0.7 minchild500 ordinal-cats,417.4,528.1,481.8,0.0,drop,far behind lgbm-L2 448.8; ordinal encoding handicaps cats; even at 450 it adds ~0 to 359-ship blend; not worth refit complexity
+strict_track_final,manifest.csv,v1_strict,jan+jul2025,catboost strict,"42 feats, tuned code+fixed zones",469.5,538.0,508.6,0.0,keep-INSURANCE,dual-track backup per review: 512.4->508.6; ship if organizers blank AOBT; strict blends/perapt rejected (mixed months)
+bagged5_LIRFspec_decision,manifest.csv,v1_sz(new zones),jan+jul2025,5-seed avg LIRF-jf specialist,"seeds 42/77/78/101/2026, matched eval",354.0,366.7,361.1,0.0,drop-noise,slice 4357 vs single 4361; pooled -0.1 with mixed months (jan -2.9/jul +2.1); expected 357-358 premise used stale old-zone 4205 number; singles range 4133-4705 = noise

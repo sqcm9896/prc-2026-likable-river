@@ -1,0 +1,4 @@
+likable-river_v2.parquet,22ff6b11ec2aab23060bec671ce13caa,2026-09-06T16:52:36.453448+00:00,v1_full,blend w_cat=0.8,344841,mean=1032 p99=2440
+likable-river_v3.parquet,e1995a2f533abe90e43da1d4db02ae4d,2026-09-06T18:09:06.740530+00:00,v1_full,blend w_cat=0.8,344841,mean=1032 p99=2437
+likable-river_v1.parquet,f178a49e601ade6d7e88e98bf7657ec6,"2026-09-06 (backfilled, file predates manifest)",v1_frozen_pool-models,"perapt-cat0.8+lgbm0.2 (pool models, no refit)",344841,"mean=1038 p99=2347 SUPERSEDED by v3, local-only"
+likable-river_v1_frozen.parquet,f178a49e601ade6d7e88e98bf7657ec6,"2026-09-06 (backfilled, file predates manifest)",v1_frozen_pool-models,"perapt-cat0.8+lgbm0.2 (pool models, no refit)",344841,"mean=1038 p99=2347 SUPERSEDED by v3, local-only"
