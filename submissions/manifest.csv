@@ -3,3 +3,6 @@ likable-river_v3.parquet,e1995a2f533abe90e43da1d4db02ae4d,2026-09-06T18:09:06.74
 likable-river_v1.parquet,f178a49e601ade6d7e88e98bf7657ec6,"2026-09-06 (backfilled, file predates manifest)",v1_frozen_pool-models,"perapt-cat0.8+lgbm0.2 (pool models, no refit)",344841,"mean=1038 p99=2347 SUPERSEDED by v3, local-only"
 likable-river_v1_frozen.parquet,f178a49e601ade6d7e88e98bf7657ec6,"2026-09-06 (backfilled, file predates manifest)",v1_frozen_pool-models,"perapt-cat0.8+lgbm0.2 (pool models, no refit)",344841,"mean=1038 p99=2347 SUPERSEDED by v3, local-only"
 likable-river_v4.parquet,1d466f644faac43fe7712ad74888f9db,2026-09-07T17:28:21.251749+00:00,v1_strict_full,"strict cat-alone (MODEL=cat, no MVT/AOBT, no patches)",344841,mean=1024 p99=1810
+likable-river_v5a.parquet,caba1884ed9ebdde0df1a065ac77e6fd,2026-09-07T20:16:31.495946+00:00,v1_full_old,"v1-lineage refit (ZONES=old, PERAPT+JFPATCH, w_cat=0.8)",344841,mean=1032 p99=2440
+likable-river_v5b.parquet,81eb26628a4749fabae01f35cf114cd0,2026-09-07T21:07:49.131586+00:00,v1_full_qx,"queue lineage refit (QEXP, PERAPT+JFPATCH, w_cat=0.8)",344841,mean=1033 p99=2442
+likable-river_v5.parquet,384cf856e1117041d17b4d04f245a9e8,2026-09-08 full refit blend,v1+v1_qx,0.7*v5a+0.3*v5b negcap (holdout 358.7),344841,mean=1032 p99=2438

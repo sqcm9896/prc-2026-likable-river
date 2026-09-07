@@ -84,11 +84,20 @@ Timeline: 1 Sep → 11 Oct 2026 23:59:59 CET. Prize €5,000 top-3.
   spread ±6 pooled noted — all frozen numbers carry seed luck. PROGRAM KILLED.
 - Git root-commit f4dcc36 done (45 files, GPLv3, manifests + code + docs).
 - UPLOADED 2026-09-07: `likable-river_v3.parquet` → s3://prc-2026-likable-river/
-  (4.5 MiB, ETag == local md5 e1995a2f…). Leaderboard result pending.
+  (4.5 MiB, ETag == local md5 e1995a2f…). LEADERBOARD: 345.57 (14s better than
+  holdout 359.2; leader youthful-giraffe 263.5; we rank ~mid-30s). v4 strict
+  uploaded, score pending.
 - PIVOT 2026-09-07 (user decision): strict track is now primary. Strict+jf rejected
   (513.7 — strict lacks m_sched so jf rows carry no delay signal); strict ship =
   cat-alone 508.6. `likable-river_v4.parquet` (strict full refit, SUB_VER=4)
   UPLOADED 2026-09-07 (ETag == md5 1d466f64). predict.py STRICT + TAG bugs fixed.
+- QUEUE BREAKTHROUGH 2026-09-08 (MIT NQ(l) idea, src/queue_exp.py): experienced-queue
+  counts (takeoffs/pushbacks in YOUR (AOBT,MVT) interval + WIP at pushback) pass Jan+Jul
+  (lgbm 440.2, cat 383.0, LIRF −250). U/Delta decomposition rejected (474/483).
+  Cross-lineage blend v1×0.7+qx×0.3 = 358.7 pooled (both months improve).
+  `likable-river_v5.parquet` (v5a old-zone refit + v5b queue refit) UPLOADED 2026-09-08
+  (ETag == md5 384cf856). Lineage discipline: ZONES=new default, ZONES=old for v1
+  refits; TAGSUF for model names.
 - Wake-ahead test (2026-09-06): heavies-ahead counts REJECTED (475.7 vs 448.8 lgbm,
   both months worse; bottom-tier gain). Fix zones confirmed pulling weight in lgbm
   (STAND_ZONE gain rank #4). Ship stays v3 (359.2 lineage).

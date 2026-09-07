@@ -14,9 +14,9 @@ import pyarrow.dataset as ds
 from .config import DATA, MODELS, SUBMISSIONS, TARGET
 from .features import FEAT_COLS, OOF_COLS, add_base, apply_maps, fit_oof
 from .submit import validate
-from .train import CATS, CG, NUMS_BASE, NUMS_PERM, STRICT, V2, fill_nans
+from .train import CATS, CG, NUMS_BASE, NUMS_PERM, QEXP, QX, STRICT, V2, fill_nans
 
-TAG = ("v2" if V2 else "v1") + ("_strict" if STRICT else "") + "_full"
+TAG = ("v2" if V2 else "v1") + ("_strict" if STRICT else "") + "_full" + os.environ.get("TAGSUF", "")
 N_VER = int(os.environ.get("SUB_VER", "1"))
 W_CAT = float(os.environ.get("W_CAT", "0.7"))
 
@@ -54,6 +54,15 @@ def main():
     feats = CATS + nums + te_cols
     Xtr = pd.concat([train[CATS + nums].reset_index(drop=True), te_tr.reset_index(drop=True)], axis=1)
     Xrk = pd.concat([rk_dep[CATS + nums].reset_index(drop=True), te_rk.reset_index(drop=True)], axis=1)
+    if QEXP:
+        from .queue_exp import add_queue_exp
+        qtr = add_queue_exp(train).reset_index(drop=True)
+        qrk = add_queue_exp(rk_dep).reset_index(drop=True)
+        assert len(qtr) == len(Xtr) and len(qrk) == len(Xrk)
+        Xtr = pd.concat([Xtr, qtr], axis=1)
+        Xrk = pd.concat([Xrk, qrk], axis=1)
+        feats = feats + QX
+        print(f"queue_exp on: {QX}")
     for c in CATS:
         Xtr[c] = Xtr[c].astype("string").fillna("MISS")
         Xrk[c] = Xrk[c].astype("string").fillna("MISS")

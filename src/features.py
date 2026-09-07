@@ -25,17 +25,21 @@ OOF_COLS = ["RUNWAY_mvt", "STAND_ZONE", "AIRCRAFT_TYPE_mvt", "AIRCRAFT_OPERATOR_
             "ADES_mvt", "ADEP_mvt"]
 
 
+ZONE_MODE = os.environ.get("ZONES", "new")  # "old" = pre-fix regex (v1 lineage refits only)
+
+
 def stand_zone(s, adep=None):
     """Terminal/apron zone from STAND. Airport-aware: leading letters (EDDF 'B41'->B)
     else first digit (EGLL '537'->5, LIRF '409'->4); prefixed with airport to avoid
-    cross-airport collisions (EGLL_5). Fixes 100% UNK at EGLL/LIRF (review 2026-09-06)."""
+    cross-airport collisions (EGLL_5). Fixes 100% UNK at EGLL/LIRF (review 2026-09-06).
+    ZONES=old restores the legacy regex for v1-lineage refits (ship lineage)."""
     s = s.astype("string")
+    if ZONE_MODE == "old" or adep is None:
+        return s.str.extract(r"^([A-Z]+)", expand=False).fillna("UNK")
     alpha = s.str.extract(r"^([A-Z]+)", expand=False)
     digit = s.str.extract(r"^(\d)", expand=False)
     zone = alpha.fillna(digit).fillna("UNK")
-    if adep is not None:
-        zone = adep.astype("string").fillna("UNK") + "_" + zone
-    return zone.fillna("UNK")
+    return (adep.astype("string").fillna("UNK") + "_" + zone).fillna("UNK")
 
 
 def add_base(df):

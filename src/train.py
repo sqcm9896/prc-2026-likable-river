@@ -35,18 +35,31 @@ CG = ["cg_tot_15", "cg_dep_15", "cg_arr_15", "cg_tot_30", "cg_dep_30", "cg_arr_3
       "log_cg_mvt_dep_30", "log_cg_mvt_arr_30", "log_cg_mvt_dep_60", "log_cg_mvt_arr_60"]
 
 
+QX = ["nq_takeoff", "nq_takeoff_rwy", "nq_pushback", "wip_at_pushback",
+      "log_nq_takeoff", "log_nq_takeoff_rwy", "log_nq_pushback", "log_wip_at_pushback"]
+QEXP = os.environ.get("QEXP", "0") == "1"  # experienced-queue features (src/queue_exp.py)
+
+
 def build():
     df = load_full(v2=V2)
     df = add_base(df)
+    if QEXP:
+        from .queue_exp import add_queue_exp
+        qx = add_queue_exp(df).reset_index(drop=True)
+        df = df.reset_index(drop=True)
     pool = df[~df.month.isin(HOLDOUT_MONTHS)].reset_index(drop=True)
     val = df[df.month.isin(HOLDOUT_MONTHS)].reset_index(drop=True)
     oof, maps, counts, gmean = fit_oof(pool)
     te_val = apply_maps(val, maps, counts, gmean)
     te_cols = [c + "_te" for c in OOF_COLS] + [c + "_logn" for c in OOF_COLS]
     nums = NUMS_BASE + ([] if STRICT else NUMS_PERM) + (CG if V2 else [])
-    feats = CATS + nums + te_cols
+    feats = CATS + nums + te_cols + (QX if QEXP else [])
     Xp = pd.concat([pool[CATS + nums].reset_index(drop=True), oof[te_cols].reset_index(drop=True)], axis=1)
     Xv = pd.concat([val[CATS + nums].reset_index(drop=True), te_val[te_cols].reset_index(drop=True)], axis=1)
+    if QEXP:
+        pmask = ~df.month.isin(HOLDOUT_MONTHS).values
+        Xp = pd.concat([Xp, qx[pmask].reset_index(drop=True)], axis=1)
+        Xv = pd.concat([Xv, qx[~pmask].reset_index(drop=True)], axis=1)
     for c in CATS:
         Xp[c] = Xp[c].astype("string").fillna("MISS")
         Xv[c] = Xv[c].astype("string").fillna("MISS")

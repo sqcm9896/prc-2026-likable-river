@@ -86,3 +86,17 @@ L3 full pass → L4 challenged AOBT precision + month-matched shift → L5 green
 - Caveat / future work: on EDDF/EGLL/LEMD join-fail slices the base model still
   beats the specialist (e.g. EDDF 380 vs 526, n=599) — kept the uniform rule to
   avoid small-slice overfit; revisit with more data or per-airport specialists.
+
+## Tail-ceiling addendum (2026-09-07, extreme-specialist + asymmetric-loss rejected)
+- Beyond jfpatch, remaining error is ~30 monster rows: 169 rows |err|>3600 hold
+  53.4% of SSE; top-3 rows alone 35.8%. Two LFPG-Jan monsters (y=84k/58k, normal
+  features/preds) look like pure label noise — undetectable, irreducible.
+- Extreme-pred specialist (catboost-d6 on pool y>5000, trigger ship-pred>8000,
+  prec 0.77): trigger RMSE 9,431 vs 10,797, Jul −23.5 BUT Jan +5.9 in every
+  threshold/mix variant — Jan extremes obey a different mechanism (specialist
+  undershoots the 87k Jan row by 35k; false triggers amplified). REJECTED by
+  Jan+Jul rule. Asymmetric global loss (lgbm α=0.25) also rejected (477.6:
+  bulk tilt hurts more than tail helps).
+- Standing conclusion: joined modeling is done (LIRF-joined minus 21 monsters =
+  RMSE 380); the tail's residue is data-error-like monsters + false triggers.
+  Further gains need new signals or leaderboard feedback, not more tail fitting.
