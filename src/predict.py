@@ -14,9 +14,9 @@ import pyarrow.dataset as ds
 from .config import DATA, MODELS, SUBMISSIONS, TARGET
 from .features import FEAT_COLS, OOF_COLS, add_base, apply_maps, fit_oof
 from .submit import validate
-from .train import CATS, CG, NUMS_BASE, NUMS_PERM, V2, fill_nans
+from .train import CATS, CG, NUMS_BASE, NUMS_PERM, STRICT, V2, fill_nans
 
-TAG = ("v2" if V2 else "v1") + "_full"
+TAG = ("v2" if V2 else "v1") + ("_strict" if STRICT else "") + "_full"
 N_VER = int(os.environ.get("SUB_VER", "1"))
 W_CAT = float(os.environ.get("W_CAT", "0.7"))
 
@@ -50,7 +50,7 @@ def main():
     te_tr = apply_maps(train, maps, counts, gmean)
     te_rk = apply_maps(rk_dep, maps, counts, gmean)
     te_cols = [c + "_te" for c in OOF_COLS] + [c + "_logn" for c in OOF_COLS]
-    nums = NUMS_BASE + NUMS_PERM + (CG if V2 else [])
+    nums = NUMS_BASE + ([] if STRICT else NUMS_PERM) + (CG if V2 else [])
     feats = CATS + nums + te_cols
     Xtr = pd.concat([train[CATS + nums].reset_index(drop=True), te_tr.reset_index(drop=True)], axis=1)
     Xrk = pd.concat([rk_dep[CATS + nums].reset_index(drop=True), te_rk.reset_index(drop=True)], axis=1)
