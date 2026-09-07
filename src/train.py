@@ -74,12 +74,12 @@ def main():
         from catboost import CatBoostRegressor, Pool
         ci = [feats.index(c) for c in CATS]
         m = CatBoostRegressor(iterations=int(os.environ.get("CAT_ITERS", "1500")), learning_rate=float(os.environ.get("CAT_LR", "0.05")), depth=int(os.environ.get("CAT_DEPTH", "8")),
-                               loss_function="RMSE", random_seed=42, verbose=200,
+                               loss_function="RMSE", random_seed=int(os.environ.get("CAT_SEED", "42")), subsample=float(os.environ.get("CAT_SUBSAMPLE", "1.0")), verbose=200,
                                early_stopping_rounds=100)
         m.fit(Pool(Xp, yp, cat_features=ci), eval_set=Pool(Xv, yv, cat_features=ci))
         pv = m.predict(Xv)
         m.save_model(str(MODELS / f"cat_{TAG}.cbm"))
-        results["catboost"] = (pv, dict(iterations=m.tree_count_, lr=float(os.environ.get("CAT_LR", "0.05")), depth=int(os.environ.get("CAT_DEPTH", "8"))))
+        results["catboost"] = (pv, dict(iterations=m.tree_count_, lr=float(os.environ.get("CAT_LR", "0.05")), depth=int(os.environ.get("CAT_DEPTH", "8")), seed=int(os.environ.get("CAT_SEED", "42")), subsample=float(os.environ.get("CAT_SUBSAMPLE", "1.0"))))
     if which in ("lgbm", "both"):
         import lightgbm as lgb
         for c in CATS:
@@ -88,7 +88,9 @@ def main():
         dtr = lgb.Dataset(Xp, yp)
         dval = lgb.Dataset(Xv, yv, reference=dtr)
         params = {"objective": os.environ.get("LGBM_OBJ", "huber"), "alpha": 0.9, "learning_rate": float(os.environ.get("LGBM_LR", "0.05")),
-                  "num_leaves": int(os.environ.get("LGBM_LEAVES", "127")), "min_data_in_leaf": int(os.environ.get("LGBM_MIN_DATA", "500")), "verbosity": -1, "seed": 42}
+                  "num_leaves": int(os.environ.get("LGBM_LEAVES", "127")), "min_data_in_leaf": int(os.environ.get("LGBM_MIN_DATA", "500")), "verbosity": -1, "seed": int(os.environ.get("LGBM_SEED", "42")),
+                  "bagging_fraction": float(os.environ.get("LGBM_BAG", "1.0")), "bagging_freq": 1 if float(os.environ.get("LGBM_BAG", "1.0")) < 1.0 else 0,
+                  "feature_fraction": float(os.environ.get("LGBM_FEAT", "1.0"))}
         m = lgb.train(params, dtr, int(os.environ.get("LGBM_ITERS", "1500")), valid_sets=[dval],
                       callbacks=[lgb.early_stopping(100), lgb.log_evaluation(200)])
         pv = m.predict(Xv)

@@ -76,6 +76,21 @@ Timeline: 1 Sep → 11 Oct 2026 23:59:59 CET. Prize €5,000 top-3.
   fix kept, ship stays v1 (Jan+Jul rule). Strict insurance track retuned 512.4→508.6
   (cat-alone; blends/perapt mixed → dropped). XGBoost 481.8 dropped (adds ~0 to ship).
   Refit iter caps aligned (LFPG 700, jf 360/890). pytest config added (4 passed).
+- Bagging test (2026-09-06, green-lit): 5-seed LIRF-jf average slice 4357 vs single
+  4361 → pooled 361.1 vs 361.2 with mixed months → REJECTED as noise. The 357-358
+  expectation used the stale old-zone 4205 number. Ship stays v3 (359.2 lineage).
+- Global bagging (2026-09-06): lgbm 5-seed avg 448.4 loses to single 447.8 (sampling
+  costs > averaging gains); cat 2-seed avg -0.2 (members corr 0.995). Pure-seed
+  spread ±6 pooled noted — all frozen numbers carry seed luck. PROGRAM KILLED.
+- Git root-commit f4dcc36 done (45 files, GPLv3, manifests + code + docs).
+- UPLOADED 2026-09-07: `likable-river_v3.parquet` → s3://prc-2026-likable-river/
+  (4.5 MiB, ETag == local md5 e1995a2f…). Leaderboard result pending.
+- Wake-ahead test (2026-09-06): heavies-ahead counts REJECTED (475.7 vs 448.8 lgbm,
+  both months worse; bottom-tier gain). Fix zones confirmed pulling weight in lgbm
+  (STAND_ZONE gain rank #4). Ship stays v3 (359.2 lineage).
+- Weather spike (2026-09-06): open ERA5 via Open-Meteo (hourly, 10 airports,
+  SOURCE.md logged) REJECTED (485.5 vs 448.8 lgbm, both months worse; grid too
+  coarse, matches 2025 limited-influence finding). Code + cache kept as dead-end.
 - NOTE: a second worker is active in this repo (wrote `src/ensemble_eval.py`,
   retrained `cat_v2.cbm` → 430.5 verified, refactored `train.fill_nans` +
   `predict.py` retrain path). Coordinate before editing shared files.

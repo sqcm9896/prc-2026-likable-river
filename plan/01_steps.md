@@ -20,10 +20,9 @@
 - [ ] S7 optional weather/ensemble. Exit: improves rolling-split RMSE or dropped.
 - [x] S8 clip policy validation. DONE 2026-09-06: negatives-only (no-op, safe);
       upper-tail cap REJECTED (+90.7 pooled).
-- [~] S9 refit full-2025, predict, validate, submit `likable-river_v<N>.parquet`.
-      DONE locally 2026-09-06: `likable-river_v3.parquet` (full refit global+perapt
-      heads+jf specialists, PERAPT=1 JFPATCH=1 W_CAT=0.8, validator green, manifest
-      row). v2 (no jfpatch) + v1 frozen kept as backups.
-      UPLOAD explicitly held per user (no submissions yet).
-- [ ] S10 publish: GPLv3 LICENSE, README repro, model card, JOAS seed.
-      Exit: public repo complete.
+- [x] S9 refit full-2025, predict, validate, submit `likable-river_v<N>.parquet`.
+      DONE 2026-09-06 (local v3) + UPLOADED 2026-09-07 (ETag verified).
+      Leaderboard result pending.
+- [~] S10 publish: GPLv3 LICENSE, README repro, model card, JOAS seed.
+      PREP done 2026-09-07 (MODEL_CARD.md, JOAS_seed.md, LICENSE, 2 commits);
+      public GitHub repo pending (needs user account + push).
