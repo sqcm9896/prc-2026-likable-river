@@ -6,3 +6,4 @@ likable-river_v4.parquet,1d466f644faac43fe7712ad74888f9db,2026-09-07T17:28:21.25
 likable-river_v5a.parquet,caba1884ed9ebdde0df1a065ac77e6fd,2026-09-07T20:16:31.495946+00:00,v1_full_old,"v1-lineage refit (ZONES=old, PERAPT+JFPATCH, w_cat=0.8)",344841,mean=1032 p99=2440
 likable-river_v5b.parquet,81eb26628a4749fabae01f35cf114cd0,2026-09-07T21:07:49.131586+00:00,v1_full_qx,"queue lineage refit (QEXP, PERAPT+JFPATCH, w_cat=0.8)",344841,mean=1033 p99=2442
 likable-river_v5.parquet,384cf856e1117041d17b4d04f245a9e8,2026-09-08 full refit blend,v1+v1_qx,0.7*v5a+0.3*v5b negcap (holdout 358.7),344841,mean=1032 p99=2438
+likable-river_v6.parquet,18dfcbded68cc6cf0a2f708a47f1ba52,2026-09-08T15:20:56+00:00,v1+v1_qx,"per-airport w(v1): LIRF 1.0/LEBL 0.2/LEMD 0.2/EGLL 0.4/rest 0.7, negcap (holdout 358.1)",344841,mean=1032 p99=2439
