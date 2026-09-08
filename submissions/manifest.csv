@@ -10,3 +10,4 @@ likable-river_v6.parquet,18dfcbded68cc6cf0a2f708a47f1ba52,2026-09-08T15:20:56+00
 likable-river_v7.parquet,9ac107ce09816a74865139e72619743e,2026-09-08T15:30:00+00:00,v1+v1_qx_LIRFjf,"v5-rule blend, LIRF-jf 383 rows->v5a (v1-spec beats qx-spec both months; holdout 357.5)",344841,mean=1032 p99=2439
 likable-river_v8probe_LFPGjf.parquet,bde7b82e95a2d282b36f54ce01dfd305,2026-09-08T15:40:00+00:00,v5-rule+LFPGjf-floor,"PROBE (uploaded as likable-river_v8.parquet): v5-rule, LFPG-Jan-jf 324 rows floor 3000",344841,mean=1033 p99=2439
 likable-river_v9.parquet,2eafbe326d5863bea3c9187085cf2628,2026-09-08T15:55:00+00:00,v5-rule+identity-floor,"SHIP: v5-rule, joined m_aobt>1800 floor m_aobt-3600 (11826 triggers; holdout 334.8)",344841,mean=1033 p99=2439
+likable-river_v10.parquet,2f4e37973540957e8576825b196a507c,2026-09-08T20:05:00+00:00,v10a+qx+floor,"SHIP: v1-leg lgbm->lgbmARR swap + qx + floor (holdout 358.4 blend-pre-floor)",344841,mean=1033 p99=2439

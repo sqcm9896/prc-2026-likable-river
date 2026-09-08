@@ -12,6 +12,9 @@ from collections import deque
 
 WINDOWS = [30, 60, 120]
 
+ARRC = [f"{p}_{w}" for w in WINDOWS
+        for p in ("n_arr", "mean_adly", "max_adly", "n_late15")]
+
 
 def _epoch(dt: pd.Series) -> np.ndarray:
     return (dt - pd.Timestamp("1970-01-01", tz="UTC")).dt.total_seconds().to_numpy()

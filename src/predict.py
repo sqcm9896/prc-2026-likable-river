@@ -16,6 +16,8 @@ from .features import FEAT_COLS, OOF_COLS, add_base, apply_maps, fit_oof
 from .submit import validate
 from .train import CATS, CG, NUMS_BASE, NUMS_PERM, QEXP, QX, STRICT, V2, fill_nans
 
+ARRP = os.environ.get("ARRP", "0") == "1"  # ARR-propagation features (src/arr_prop.py)
+
 TAG = ("v2" if V2 else "v1") + ("_strict" if STRICT else "") + "_full" + os.environ.get("TAGSUF", "")
 N_VER = int(os.environ.get("SUB_VER", "1"))
 W_CAT = float(os.environ.get("W_CAT", "0.7"))
@@ -63,6 +65,21 @@ def main():
         Xrk = pd.concat([Xrk, qrk], axis=1)
         feats = feats + QX
         print(f"queue_exp on: {QX}")
+    if ARRP:
+        from .arr_prop import ARRC, add_arr_prop
+        acols = ["ADES_mvt", "MVT_TIME_UTC_mvt", "SCHED_TIME_UTC_mvt"]
+        atr = ds.dataset(sorted(glob.glob(str(DATA / "training_*.parquet"))),
+                         format="parquet").to_table(
+            columns=acols, filter=ds.field("PHASE_mvt") == "ARR").to_pandas()
+        ark = ds.dataset([str(DATA / "ranking.parquet")], format="parquet").to_table(
+            columns=acols, filter=ds.field("PHASE_mvt") == "ARR").to_pandas()
+        qtr = add_arr_prop(train.reset_index(drop=True), atr).reset_index(drop=True)
+        qrk = add_arr_prop(rk_dep.reset_index(drop=True), ark).reset_index(drop=True)
+        assert len(qtr) == len(Xtr) and len(qrk) == len(Xrk)
+        Xtr = pd.concat([Xtr, qtr[ARRC]], axis=1)
+        Xrk = pd.concat([Xrk, qrk[ARRC]], axis=1)
+        feats = feats + ARRC
+        print(f"arr_prop on: {ARRC}")
     for c in CATS:
         Xtr[c] = Xtr[c].astype("string").fillna("MISS")
         Xrk[c] = Xrk[c].astype("string").fillna("MISS")
