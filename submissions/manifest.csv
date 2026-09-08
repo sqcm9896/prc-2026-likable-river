@@ -8,3 +8,5 @@ likable-river_v5b.parquet,81eb26628a4749fabae01f35cf114cd0,2026-09-07T21:07:49.1
 likable-river_v5.parquet,384cf856e1117041d17b4d04f245a9e8,2026-09-08 full refit blend,v1+v1_qx,0.7*v5a+0.3*v5b negcap (holdout 358.7),344841,mean=1032 p99=2438
 likable-river_v6.parquet,18dfcbded68cc6cf0a2f708a47f1ba52,2026-09-08T15:20:56+00:00,v1+v1_qx,"per-airport w(v1): LIRF 1.0/LEBL 0.2/LEMD 0.2/EGLL 0.4/rest 0.7, negcap (holdout 358.1)",344841,mean=1032 p99=2439
 likable-river_v7.parquet,9ac107ce09816a74865139e72619743e,2026-09-08T15:30:00+00:00,v1+v1_qx_LIRFjf,"v5-rule blend, LIRF-jf 383 rows->v5a (v1-spec beats qx-spec both months; holdout 357.5)",344841,mean=1032 p99=2439
+likable-river_v8probe_LFPGjf.parquet,bde7b82e95a2d282b36f54ce01dfd305,2026-09-08T15:40:00+00:00,v5-rule+LFPGjf-floor,"PROBE (uploaded as likable-river_v8.parquet): v5-rule, LFPG-Jan-jf 324 rows floor 3000",344841,mean=1033 p99=2439
+likable-river_v9.parquet,2eafbe326d5863bea3c9187085cf2628,2026-09-08T15:55:00+00:00,v5-rule+identity-floor,"SHIP: v5-rule, joined m_aobt>1800 floor m_aobt-3600 (11826 triggers; holdout 334.8)",344841,mean=1033 p99=2439
