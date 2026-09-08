@@ -17,6 +17,7 @@ from .submit import validate
 from .train import CATS, CG, NUMS_BASE, NUMS_PERM, QEXP, QX, STRICT, V2, fill_nans
 
 ARRP = os.environ.get("ARRP", "0") == "1"  # ARR-propagation features (src/arr_prop.py)
+RWYP = os.environ.get("RWYP", "0") == "1"  # runway-flow features (src/rwy_flow.py)
 
 TAG = ("v2" if V2 else "v1") + ("_strict" if STRICT else "") + "_full" + os.environ.get("TAGSUF", "")
 N_VER = int(os.environ.get("SUB_VER", "1"))
@@ -80,6 +81,15 @@ def main():
         Xrk = pd.concat([Xrk, qrk[ARRC]], axis=1)
         feats = feats + ARRC
         print(f"arr_prop on: {ARRC}")
+    if RWYP:
+        from .rwy_flow import RWYC, add_rwy_flow
+        qtr = add_rwy_flow(train.reset_index(drop=True)).reset_index(drop=True)
+        qrk = add_rwy_flow(rk_dep.reset_index(drop=True)).reset_index(drop=True)
+        assert len(qtr) == len(Xtr) and len(qrk) == len(Xrk)
+        Xtr = pd.concat([Xtr, qtr[RWYC]], axis=1)
+        Xrk = pd.concat([Xrk, qrk[RWYC]], axis=1)
+        feats = feats + RWYC
+        print(f"rwy_flow on: {RWYC}")
     for c in CATS:
         Xtr[c] = Xtr[c].astype("string").fillna("MISS")
         Xrk[c] = Xrk[c].astype("string").fillna("MISS")
