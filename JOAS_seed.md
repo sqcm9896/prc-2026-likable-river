@@ -48,7 +48,8 @@ leaderboard. Code/data: GPLv3 repo (reproduce in README), open data only.
 - Table: baselines → 433.6 → 423.7 → 422.9 → **359.2** (per-airport slices,
   MAE 163, ±2 min 53%). Strict (operational, no MVT/AOBT) track: 508.6.
 - Ablations: each rejected variant with Jan/Jul deltas (from experiments.csv).
-- Leaderboard: [TO FILL after results].
+- Leaderboard: [v10 scored 316.05 (2026-09-08), v11 pending; identity-floor
+  mechanism (−20.3) is the competition-time finding to add].
 
 ## 5. Discussion
 - Leakage position: permissive use of unblanked MVT/AOBT documented; operational

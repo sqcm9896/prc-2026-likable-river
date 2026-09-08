@@ -3,10 +3,13 @@
 ## Model details
 - **Task:** predict departure taxi-out time (seconds) = `MVT_TIME_UTC − BLOCK_TIME_UTC`
   for 344,841 DEP rows (Jan+Jul 2026) at 10 European airports.
-- **Ship config (v5, uploaded 2026-09-08):** 0.7 × v1-lineage ship + 0.3 × queue-lineage
-  ship (each = CatBoost×0.8 + LightGBM-L2×0.2, per-airport heads, join-fail
-  specialists, negative-cap). Full-2025 refits (ZONES=old v5a + QEXP v5b).
-  Holdout 358.7 (jan 354.7 / jul 361.9). Previous ship v3 (359.2) kept as fallback.
+- **Ship config (v11, uploaded 2026-09-09, scoring after UTC reset):** 0.7 × v1-lineage
+  ship + 0.3 × queue-lineage ship (each = CatBoost×0.8 + LightGBM-L2×0.2 with
+  ARR-propagation + runway-flow junior features, per-airport heads, join-fail
+  specialists) + physics-identity floor (joined m_aobt>1800 → max(pred,
+  m_aobt−3600)) + negative-cap. Full-2025 refits.
+  Scored ships: v10 **316.05**, v9 316.19, v5 336.46 (leaderboard RMSE).
+  Previous ships v3 (345.57) and v4-strict (470.85) kept as fallback/insurance.
 - **Hyperparameters:** CatBoost iters 1500 (LFPG head capped 700), lr 0.05, depth 8,
   RMSE loss; LightGBM-L2 leaves 127, min_data 500, lr 0.05. All decisions logged
   in `reports/experiments.csv`.
